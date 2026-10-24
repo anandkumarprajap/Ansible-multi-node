@@ -1,0 +1,28 @@
+
+# The Goal is to run devbaord - this uses docker compose and code is on github
+#
+# tasks
+# git clone
+# install docker compose
+# give user the correct permissions
+# run docker compose up
+
+- name: Run Devboard App
+  hosts: servers
+  become: true
+
+  tasks:
+    - name: Clone Devboard
+      git:
+        repo: 'https://github.com/anandkumarprajap/GitHub-Actions-Revision.git'
+        dest: /home/ubuntu/devboard-app
+        single_branch: yes
+        version: master
+
+    - name: Copy .env file
+      ansible.builtin.shell: cp /home/ubuntu/devboard-app/.env.example /home/ubuntu/devboard-app/.env
+
+    - name: Run the app via docker compose
+      shell:
+         cmd: docker compose up -d
+         chdir: /home/ubuntu/devboard-app
